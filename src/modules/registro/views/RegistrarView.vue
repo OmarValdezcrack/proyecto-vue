@@ -1,16 +1,17 @@
 <template>
     <div>
         <h2>Formulario de registro</h2>
-        <form :validation-schema="schema" @submit="onSubmit">
+        <Form :validation-schema="schema" @submit="onSubmit">
             <div class="form">
                 <div>
                     <label for="nombre">Nombre:</label>
-                    <Field type="text" name="nombre" id="nombre" placeholder="ingrese su nombre"/>
+                    <Field v-model="nombre" type="text" name="nombre" id="nombre" placeholder="Ingrese su nombre"/>
                     <ErrorMessage name="nombre" />
                 </div>
+
                 <div class="form">
                     <label for="correo">Correo:</label>
-                    <Field type="email" name="email" id="correo" placeholder="ingrese su email"/>
+                    <Field v-model="email" type="email" name="email" id="correo" placeholder="Ingrese su email"/>
                     <ErrorMessage name="email" />
                 </div>
 
@@ -18,16 +19,23 @@
                     <button type="submit">Registrar</button>
                 </div>
             </div>
-        </form>
+        </Form>
     </div>
 </template>
 
 <script setup>
 import { Form, Field, ErrorMessage } from 'vee-validate';
-import { schema } from '../schemas/validationSchema';
+import { schema } from '../schemas/validationSchema'; 
+import { useRegistrarStore } from '../stores/registrarStore'; 
+import { ref } from 'vue';
 
-const onSubmit = () => {
-    console.log('se ha enviado el formulario');
+const registrarStore = useRegistrarStore();
+const nombre = ref('');
+const email = ref('');
+
+const onSubmit = (values) => {
+    registrarStore.guardarRegistro(values.nombre, values.email);
+    console.log('Se ha enviado el formulario', values);
 };
 </script>
 
